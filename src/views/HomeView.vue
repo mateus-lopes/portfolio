@@ -4,11 +4,13 @@ import BpHero from '../components/blueprint/BpHero.vue'
 import BpTrajectory from '../components/blueprint/BpTrajectory.vue'
 import BpProjects from '../components/blueprint/BpProjects.vue'
 import BpContact from '../components/blueprint/BpContact.vue'
+import BpCursor from '../components/blueprint/BpCursor.vue'
 
 const year = new Date().getFullYear()
 </script>
 
 <template>
+  <BpCursor />
   <div class="page">
     <BpHeader />
     <main class="content">
@@ -32,6 +34,9 @@ const year = new Date().getFullYear()
 
 <style scoped>
 .page {
+  /* acima da camada da "lanterna" do cursor */
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 clamp(16px, 4vw, 40px) 64px;
