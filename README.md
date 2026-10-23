@@ -2,7 +2,7 @@
 
 I built this page to organize my small projects in a simple and elegant portfolio.  
 
-[![Deploy](https://img.shields.io/badge/View%20Project-online-blue)](https://mateus-lopes.github.io/portifolio/)
+[![Deploy](https://img.shields.io/badge/View%20Project-online-blue)](https://mateus-lopes.github.io/portfolio/)
 
 ![Imagem do projeto](https://github.com/user-attachments/assets/a505f2f3-4f3c-4a2f-b56e-4d4c32e96f52)
 
@@ -17,8 +17,8 @@ I built this page to organize my small projects in a simple and elegant portfoli
 Clone the repository and navigate into the folder:
 
 ```bash
-git clone https://github.com/mateus-lopes/portifolio.git
-cd portifolio
+git clone https://github.com/mateus-lopes/portfolio.git
+cd portfolio
 ```
 
 Install the dependencies and run the project:
