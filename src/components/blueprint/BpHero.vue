@@ -1,5 +1,30 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import photo from '../../assets/images/foto-exercito.jpg'
+
+// Blocos que cobrem a foto e somem em onda diagonal (mesmo tamanho da grade de 40px)
+const COLS = 8
+const ROWS = 10
+const START = 0.35 // segundos até o primeiro bloco
+const STEP = 0.045 // atraso entre diagonais
+const JITTER = 0.12 // variação aleatória para não parecer mecânico
+
+const makeTiles = () =>
+  Array.from({ length: COLS * ROWS }, (_, i) => {
+    const col = i % COLS
+    const row = Math.floor(i / COLS)
+    const delay = START + (col + row) * STEP + Math.random() * JITTER
+    return { id: i, delay: `${delay.toFixed(3)}s` }
+  })
+
+const tiles = ref(makeTiles())
+const build = ref(0)
+
+// Demonstração: clicar na foto repete a animação
+const replay = () => {
+  tiles.value = makeTiles()
+  build.value++
+}
 </script>
 
 <template>
@@ -17,22 +42,33 @@ import photo from '../../assets/images/foto-exercito.jpg'
         </i18n-t>
       </div>
 
-      <figure class="photo-col">
+      <figure :key="build" class="photo-col">
         <div class="photo-row">
-          <div class="frame">
+          <div class="frame" title="Clique para repetir a animação" @click="replay">
             <span class="reg reg--tl" aria-hidden="true"></span>
             <span class="reg reg--tr" aria-hidden="true"></span>
             <span class="reg reg--bl" aria-hidden="true"></span>
             <span class="reg reg--br" aria-hidden="true"></span>
             <div class="duo">
               <img :src="photo" :alt="$t('hero.photoAlt')" width="800" height="1000" />
+              <div class="tiles" aria-hidden="true">
+                <span
+                  v-for="tile in tiles"
+                  :key="tile.id"
+                  class="tile"
+                  :style="{ animationDelay: tile.delay }"
+                ></span>
+              </div>
             </div>
           </div>
           <div class="dim dim--v" aria-hidden="true">
             <b></b><i></i><span>400</span><i></i><b></b>
           </div>
         </div>
-        <div class="dim dim--h" aria-hidden="true"><b></b><i></i><span>320</span><i></i><b></b></div>      </figure>
+        <div class="dim dim--h" aria-hidden="true">
+          <b></b><i></i><span>320</span><i></i><b></b>
+        </div>
+      </figure>
     </div>
 
     <dl class="bp-box spec">
@@ -173,7 +209,7 @@ import photo from '../../assets/images/foto-exercito.jpg'
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
   background-image:
     linear-gradient(rgba(230, 241, 255, 0.18) 1px, transparent 1px),
@@ -313,6 +349,147 @@ import photo from '../../assets/images/foto-exercito.jpg'
   margin: 0;
   font-size: 14px;
   color: var(--bp-ink);
+}
+
+/* ---------- Animação de montagem da foto ---------- */
+
+.frame {
+  cursor: pointer;
+}
+
+/* Blocos que cobrem a foto: acendem em ciano e somem.
+   Sem animação (movimento reduzido) ficam invisíveis e a foto aparece direto. */
+.tiles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(10, minmax(0, 1fr));
+  pointer-events: none;
+}
+
+.tile {
+  opacity: 0;
+  background: var(--bp-bg);
+  box-shadow: inset 0 0 0 1px transparent;
+  animation: tile-in 0.55s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+@keyframes tile-in {
+  0% {
+    opacity: 1;
+    background: var(--bp-bg);
+    box-shadow: inset 0 0 0 1px rgba(92, 200, 255, 0.25);
+    transform: scale(1);
+  }
+  35% {
+    opacity: 1;
+    background: rgba(92, 200, 255, 0.55);
+    box-shadow: inset 0 0 0 1px var(--bp-cyan);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    background: rgba(92, 200, 255, 0);
+    box-shadow: inset 0 0 0 1px transparent;
+    transform: scale(0.85);
+  }
+}
+
+/* A borda e a grade da foto surgem antes dos blocos */
+.duo {
+  animation: frame-in 0.4s ease 0.15s backwards;
+}
+
+@keyframes frame-in {
+  from {
+    border-color: transparent;
+  }
+}
+
+.duo::before {
+  animation: fade-in 0.6s ease 0.25s backwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Marcas de registro giram e encaixam nos cantos */
+.reg {
+  animation: reg-in 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) backwards;
+}
+
+.reg--tl {
+  animation-delay: 0s;
+}
+
+.reg--tr {
+  animation-delay: 0.08s;
+}
+
+.reg--br {
+  animation-delay: 0.16s;
+}
+
+.reg--bl {
+  animation-delay: 0.24s;
+}
+
+@keyframes reg-in {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(-90deg);
+  }
+}
+
+/* Cotas: as linhas crescem do número para as pontas */
+.dim i {
+  animation: dim-grow 0.6s cubic-bezier(0.6, 0, 0.2, 1) 1.3s backwards;
+}
+
+.dim--h i:first-of-type {
+  transform-origin: right;
+}
+
+.dim--h i:last-of-type {
+  transform-origin: left;
+}
+
+.dim--v i {
+  animation-name: dim-grow-v;
+}
+
+.dim--v i:first-of-type {
+  transform-origin: bottom;
+}
+
+.dim--v i:last-of-type {
+  transform-origin: top;
+}
+
+.dim span,
+.dim b {
+  animation: fade-in 0.4s ease 1.2s backwards;
+}
+
+.dim b {
+  animation-delay: 1.8s;
+}
+
+@keyframes dim-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes dim-grow-v {
+  from {
+    transform: scaleY(0);
+  }
 }
 
 @media (max-width: 767px) {
