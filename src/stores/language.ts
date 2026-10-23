@@ -10,7 +10,7 @@ export const useLanguageStore = defineStore('language', () => {
   if (savedLanguage) {
     locale.value = savedLanguage
   } else {
-    locale.value = 'en'
+    locale.value = navigator.language.toLowerCase().startsWith('pt') ? 'pt' : 'en'
   }
 
   const setLanguage = (lang: string) => {
