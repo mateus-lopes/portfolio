@@ -203,7 +203,7 @@ export const personalProjects: Project[] = [
     url: 'https://mateus-lopes.github.io/trilha-programacao/',
   },
   {
-    name: 'Planner Semanal',
+    name: 'Planner da minha esposa',
     desc: {
       pt: 'Tarefas por dia, cuidados pessoais e pote de vitórias.',
       en: 'Daily tasks, self-care and a jar of small wins.',
