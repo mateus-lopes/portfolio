@@ -179,7 +179,7 @@ export const timeline: TimelineItem[] = [
 
 export const personalProjects: Project[] = [
   {
-    name: 'Lista de Mercado',
+    name: 'Lista de Mercado Inteligente',
     desc: {
       pt: 'Aprende o que você compra e sugere o que está acabando.',
       en: 'Learns what you buy and suggests what is running out.',
