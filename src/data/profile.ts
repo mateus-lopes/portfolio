@@ -179,6 +179,14 @@ export const timeline: TimelineItem[] = [
 
 export const personalProjects: Project[] = [
   {
+    name: 'Sistema de Desempenho e Cotações',
+    desc: {
+      pt: 'Demo de metas, comissão e cotação de fretes para transportadora.',
+      en: 'Demo of goals, commission and freight quotes for a carrier.',
+    },
+    url: 'https://sistema-desempenho.mateusalbano.workers.dev',
+  },
+  {
     name: 'Lista de Mercado Inteligente',
     desc: {
       pt: 'Aprende o que você compra e sugere o que está acabando.',
